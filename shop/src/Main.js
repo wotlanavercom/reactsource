@@ -1,60 +1,107 @@
-import "./Main.css";
-import { Button, Col, Container, Row, Table } from "react-bootstrap";
-import axios from "axios";
+import { Outlet, useNavigate } from "react-router-dom";
+import Footer from "./Footer";
+import {
+  Container,
+  Row,
+  Col,
+  Navbar,
+  Nav,
+  NavDropdown,
+  Form,
+  Button,
+} from "react-bootstrap";
 
-// 컴포넌트에서 이미지 삽입하기
-// 1) puclic 폴더에 이미지 넣기
-// 2) css 파일 따로 작성 후 url() => src 폴더에 이미지가 존재하는 경우
-
-export default function Main(props) {
-  // 넘어온 신발 데이터 가져오기
-  const shoes = props.shoes;
-
+export default function Main() {
   return (
     <>
-      <div>
-        <div className="main-bg"></div>
-      </div>
-      <Container>
-        <Row className="mx-3">
-          {shoes.map((shoe) => (
-            <Col className="mt-3" md={3} key={shoe.id}>
-              <div>
-                <img
-                  src={shoe.src}
-                  alt={shoe.alt}
-                  className="img-fluid d-block"
-                />
-                <div className="px-3 h6">
-                  <p className="small">
-                    <a href={"/detail/" + shoe.id}>{shoe.pname}</a>
-                  </p>
-                  <p className="small">색상 : {shoe.color}</p>
-                  <p className="small">가격 : {shoe.price}</p>
-                </div>
-              </div>
-            </Col>
-          ))}
-        </Row>
-        <Row className="mt-3 mx-3">
-          <Button
-            variant="outline-secondary"
-            onClick={() => {
-              let url = "https://wotlanavercom.github.io/product.json";
-              axios
-                .get(url)
-                .then((response) => {
-                  console.log(response.data);
-                })
-                .catch(() => {
-                  console.log("오류발생");
-                });
+      <Top />
+      <Menu />
+      <Outlet />
+      <Footer />
+    </>
+  );
+}
+
+function Top() {
+  const navigate = useNavigate();
+
+  return (
+    <Container className="my-2" fluid>
+      <Row className="text-center">
+        <Col>
+          <Navbar.Brand
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/");
             }}
           >
-            더보기......
-          </Button>
-        </Row>
+            <img
+              src="/logo-no-background.png"
+              alt=""
+              className="d-inline-block"
+              width="200"
+              height="124"
+            />
+          </Navbar.Brand>
+        </Col>
+      </Row>
+    </Container>
+  );
+}
+
+function Menu() {
+  const navigate = useNavigate();
+
+  return (
+    <Navbar bg="dark" variant="dark">
+      <Container>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <NavDropdown title="전체카고테리" id="basic-nav-dropdown">
+              <NavDropdown.Item
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate("/runningshoes");
+                }}
+              >
+                운동화
+              </NavDropdown.Item>
+              <NavDropdown.Item href="">구두</NavDropdown.Item>
+              <NavDropdown.Item href="">부츠/워커</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="">SPECIAL</NavDropdown.Item>
+            </NavDropdown>
+            <Nav.Link
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/runningshoes");
+              }}
+            >
+              운동화
+            </Nav.Link>
+            <Nav.Link href="">구두</Nav.Link>
+            <Nav.Link href="/event/one">이벤트</Nav.Link>
+            <Nav.Link
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/cart");
+              }}
+            >
+              <span class="material-symbols-outlined">shopping_cart</span>
+            </Nav.Link>
+          </Nav>
+          <Form className="d-flex">
+            <Form.Control type="search" placeholder="Search" className="me-2" />
+            <Button variant="success">Search</Button>
+          </Form>
+          <div className="mx-3 text-white">님 반갑습니다</div>
+        </Navbar.Collapse>
       </Container>
-    </>
+    </Navbar>
   );
 }
